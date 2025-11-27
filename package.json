@@ -12,13 +12,31 @@
     "dev": "concurrently -n \"client,server\" -c \"bgBlue,bgYellow\" \"npm start\" \"npm run server\""
   },
   "dependencies": {
+    "@ramonak/react-progress-bar": "^5.4.0",
+    "@reduxjs/toolkit": "^2.11.0",
     "@tailwindcss/vite": "^4.1.17",
+    "axios": "^1.13.2",
+    "chart.js": "^4.5.1",
+    "copy-to-clipboard": "^3.3.3",
     "icons": "^1.0.0",
     "react": "^19.2.0",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.0",
+    "react-dropzone": "^14.3.8",
+    "react-hook-form": "^7.66.1",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
+    "react-otp-input": "^3.1.1",
+    "react-rating-stars-component": "^2.2.0",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.6",
-    "react-type-animation": "^3.2.0"
+    "react-scripts": "^5.0.1",
+    "react-super-responsive-table": "^6.0.2",
+    "react-type-animation": "^3.2.0",
+    "redux-toolkit": "^1.1.2",
+    "swiper": "^12.0.3",
+    "web-vitals": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

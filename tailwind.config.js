@@ -128,25 +128,6 @@ module.exports = {
       },
 
 
-        "Blueberry": {
-         50: "#6B7A8F"
-        },
-
-       "Apricot": {
-         50: "#F7882F",
-         60:"#FFF0DF",
-         70:"#FFD1A5"
-        },
-       "Citrus": {
-         50: "#F7C331"
-        },
-
-          "Apple Core": {
-         50: "#140D04",
-         60:"#FFD1A5"
-        }
-       
-
     },
     extend: {
       maxWidth: {
