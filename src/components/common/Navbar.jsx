@@ -138,6 +138,23 @@ function Navbar() {
               )}
             </Link>
           )}
+
+          {user && user?.accountType !==
+           ACCOUNT_TYPE.INSTRUCTOR 
+           &&(
+             <Link to="/doubt-helper">
+            <button className="px-3 py-1 rounded-md bg-yellow-50 text-richblack-900">
+           Ask AI Doubt
+           </button>
+            </Link>
+
+           )
+          }
+           
+          
+
+
+
           {token === null && (
             <Link to="/login">
               <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">

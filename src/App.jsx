@@ -10,7 +10,14 @@ import ForgotPassword from './pages/ForgotPassword';
 import UpdatePassword from './pages/UpdatePassword';
 import VerifyEmail from './pages/VerifyEmail';
 import About from "./pages/About";
+import DoubtChat from './components/common/DoubtChat';
 // import Contact from "./pages/Contact";
+
+// App.jsx or Routes.jsx
+
+
+
+
 
 const App = () => {
     const dispatch = useDispatch();
@@ -26,6 +33,13 @@ const App = () => {
   <Routes>
 
     <Route path="/" element={<Home/>}/>
+
+    <Route path="/doubt-helper" 
+          element={
+           
+            <DoubtChat />
+         
+            } />
 
 
   <Route
