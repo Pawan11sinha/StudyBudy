@@ -1,3 +1,217 @@
+// import { useState } from "react"
+
+// const SUBJECTS = ["General", "Math", "DSA", "DBMS", "OS", "CN", "Web Dev"]
+
+// function AIDoubtHelper() {
+//   const [subject, setSubject] = useState("General")
+//   const [input, setInput] = useState("")
+//   const [messages, setMessages] = useState([
+//     {
+//       id: 1,
+//       from: "bot",
+//       text: "Hi! I'm your AI tutor. Ask me any doubt 🙂",
+//     },
+//   ])
+//   const [loading, setLoading] = useState(false)
+//   const [error, setError] = useState("")
+//   const [voiceOn, setVoiceOn] = useState(false)
+//   const [isPlaying, setIsPlaying] = useState(false)
+
+//   const handleSend = async () => {
+//     const trimmed = input.trim()
+//     if (!trimmed || loading) return
+
+//     const userMessage = {
+//       id: Date.now(),
+//       from: "user",
+//       text: trimmed,
+//     }
+
+//     // optimistic update
+//     setMessages((prev) => [...prev, userMessage])
+//     setInput("")
+//     setError("")
+//     setLoading(true)
+
+//     try {
+//       const res = await fetch("http://localhost:4000/api/v1/doubt", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({
+//           question: trimmed,
+//           subject,
+//           history: messages.map((m) => ({
+//             role: m.from === "user" ? "user" : "model",
+//             content: m.text,
+//           })),
+//         }),
+//       })
+
+//       const data = await res.json()
+
+//       if (!res.ok || !data?.success) {
+//         throw new Error(data?.message || "Something went wrong")
+//       }
+
+//       const botMessage = {
+//         id: Date.now() + 1,
+//         from: "bot",
+//         text: data.answer,
+//       }
+
+//       setMessages((prev) => [...prev, botMessage])
+
+//       // optional: basic voice (browser speechSynthesis)
+//       if (voiceOn && "speechSynthesis" in window) {
+//         const utterance = new SpeechSynthesisUtterance(data.answer)
+//         setIsPlaying(true)
+//         utterance.onend = () => setIsPlaying(false)
+//         window.speechSynthesis.speak(utterance)
+//       }
+//     } catch (err) {
+//       console.error(err)
+//       setMessages((prev) => [
+//         ...prev,
+//         {
+//           id: Date.now() + 2,
+//           from: "bot",
+//           text: "Sorry, something went wrong 🥺",
+//         },
+//       ])
+//       setError(err.message)
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   const handleKeyDown = (e) => {
+//     if (e.key === "Enter" && !e.shiftKey) {
+//       e.preventDefault()
+//       handleSend()
+//     }
+//   }
+
+//   const stopVoice = () => {
+//     if ("speechSynthesis" in window) {
+//       window.speechSynthesis.cancel()
+//       setIsPlaying(false)
+//     }
+//   }
+
+//   return (
+//     <div className="flex flex-col h-[calc(100vh-120px)] rounded-2xl bg-richblack-900 border border-richblack-700 overflow-hidden">
+//       {/* Header */}
+//       <div className="flex items-center justify-between px-6 py-3 border-b border-richblack-700 bg-richblack-800">
+//         <div>
+//           <h2 className="text-lg font-semibold text-richblack-5">
+//             AI Doubt Helper
+//           </h2>
+//         </div>
+
+//         <div className="flex items-center gap-3 text-xs">
+//           <span className="px-2 py-1 rounded-full bg-richblack-700 text-richblack-200">
+//             Subject: {subject}
+//           </span>
+
+//           <button
+//             onClick={() => setVoiceOn((v) => !v)}
+//             className={`px-3 py-1 rounded-full border text-xs ${
+//               voiceOn
+//                 ? "bg-yellow-50 text-richblack-900 border-yellow-50"
+//                 : "border-richblack-600 text-richblack-200"
+//             }`}
+//           >
+//             Voice {voiceOn ? "On" : "Off"}
+//           </button>
+
+//           <button
+//             onClick={handleSend}
+//             disabled={loading}
+//             className="px-3 py-1 rounded-full bg-yellow-50 text-richblack-900 text-xs font-medium disabled:opacity-60"
+//           >
+//             {loading ? "Thinking..." : "Play"}
+//           </button>
+
+//           <button
+//             onClick={stopVoice}
+//             disabled={!isPlaying}
+//             className="px-3 py-1 rounded-full bg-richblack-700 text-richblack-200 text-xs disabled:opacity-50"
+//           >
+//             Stop
+//           </button>
+//         </div>
+//       </div>
+
+//       {/* Subject tabs */}
+//       <div className="px-4 py-3 flex flex-wrap gap-2 border-b border-richblack-700 bg-richblack-900">
+//         {SUBJECTS.map((subj) => (
+//           <button
+//             key={subj}
+//             onClick={() => setSubject(subj)}
+//             className={`px-4 py-1 rounded-full text-xs font-medium transition-all ${
+//               subject === subj
+//                 ? "bg-yellow-50 text-richblack-900"
+//                 : "bg-richblack-800 text-richblack-200 hover:bg-richblack-700"
+//             }`}
+//           >
+//             {subj}
+//           </button>
+//         ))}
+//       </div>
+
+//       {/* Chat area */}
+//       <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-richblack-900">
+//         {messages.map((m) => (
+//           <div
+//             key={m.id}
+//             className={`flex ${
+//               m.from === "user" ? "justify-end" : "justify-start"
+//             }`}
+//           >
+//             <div
+//               className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm leading-relaxed ${
+//                 m.from === "user"
+//                   ? "bg-yellow-50 text-richblack-900"
+//                   : "bg-richblack-700 text-richblack-5"
+//               }`}
+//             >
+//               {m.text}
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* Input area */}
+//       <div className="px-4 py-3 border-t border-richblack-700 bg-richblack-900">
+//         <div className="flex items-center gap-3">
+//           <textarea
+//             rows={1}
+//             value={input}
+//             onChange={(e) => setInput(e.target.value)}
+//             onKeyDown={handleKeyDown}
+//             placeholder="Ask your doubt..."
+//             className="flex-1 resize-none rounded-full bg-richblack-800 text-richblack-5 px-4 py-2 text-sm outline-none border border-richblack-700 focus:border-yellow-50"
+//           />
+//           <button
+//             onClick={handleSend}
+//             disabled={loading || !input.trim()}
+//             className="rounded-full p-3 bg-yellow-50 text-richblack-900 font-semibold text-sm disabled:opacity-60"
+//           >
+//             ➤
+//           </button>
+//         </div>
+//         {error && (
+//           <p className="mt-1 text-xs text-pink-200">
+//             Error: {error}. Please try again.
+//           </p>
+//         )}
+//       </div>
+//     </div>
+//   )
+// }
+
+// export default AIDoubtHelper
+
 
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
@@ -107,13 +321,13 @@ const DoubtChat = () => {
     window.speechSynthesis.speak(utterance);
   };
 
-  // const handlePauseSpeech = () => {
-  //   if (typeof window === "undefined") return;
-  //   if (!("speechSynthesis" in window)) return;
-  //   if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-  //     window.speechSynthesis.pause();
-  //   }
-  // };
+  const handlePauseSpeech = () => {
+    if (typeof window === "undefined") return;
+    if (!("speechSynthesis" in window)) return;
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      window.speechSynthesis.pause();
+    }
+  };
 
   const handleStopSpeech = () => {
     if (typeof window === "undefined") return;
@@ -163,7 +377,7 @@ const DoubtChat = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/v1/doubt/doubt-helper",
+        "http://localhost:4000/api/v1/doubt",
         {
           message: input,
           history: historyToSend,
@@ -224,15 +438,15 @@ const DoubtChat = () => {
               {voiceEnabled ? "🔊 Voice Auto" : "🔈 Voice Off"}
             </button>
 
-            <button
+            {/* <button
               type="button"
               onClick={handleGlobalPlay}
               className="text-[11px] px-2 py-0.5 rounded-full border border-richblack-700 bg-richblack-800 text-yellow-200 hover:bg-richblack-700"
             >
               ▶ Play
-            </button>
-{/* 
-            <button
+            </button> */}
+
+            {/* <button
               type="button"
               onClick={handlePauseSpeech}
               className="text-[11px] px-2 py-0.5 rounded-full border border-richblack-700 bg-richblack-800 text-yellow-200 hover:bg-richblack-700"
@@ -240,13 +454,13 @@ const DoubtChat = () => {
               ⏸ Pause
             </button> */}
 
-            <button
+            {/* <button
               type="button"
               onClick={handleStopSpeech}
               className="text-[11px] px-2 py-0.5 rounded-full border border-richblack-700 bg-richblack-800 text-yellow-200 hover:bg-richblack-700"
             >
               ⏹ Stop
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -291,7 +505,9 @@ const DoubtChat = () => {
                   `}
                 >
                   {msg.text}
-               
+
+                  {/* Per-message controls (optional, use same global handlers) */}
+                 
                 </div>
               </div>
             );
