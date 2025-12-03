@@ -15,7 +15,7 @@ const ContactUsForm = () => {
   } = useForm()
 
   const submitContactForm = async (data) => {
-    // console.log("Form Data - ", data)
+    console.log("Form Data - ", data)
     try {
       setLoading(true)
       const res = await apiConnector(
@@ -106,7 +106,8 @@ const ContactUsForm = () => {
           Phone Number
         </label>
 
-        <div className="flex gap-5">
+        <div className="flex flex-row gap-5">
+          {/* dropdown */}
           <div className="flex w-[81px] flex-col gap-2">
             <select
               type="text"

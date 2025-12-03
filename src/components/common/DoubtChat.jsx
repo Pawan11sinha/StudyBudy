@@ -438,29 +438,29 @@ const DoubtChat = () => {
               {voiceEnabled ? "🔊 Voice Auto" : "🔈 Voice Off"}
             </button>
 
-            {/* <button
+            <button
               type="button"
               onClick={handleGlobalPlay}
               className="text-[11px] px-2 py-0.5 rounded-full border border-richblack-700 bg-richblack-800 text-yellow-200 hover:bg-richblack-700"
             >
               ▶ Play
-            </button> */}
+            </button>
 
-            {/* <button
+            <button
               type="button"
               onClick={handlePauseSpeech}
               className="text-[11px] px-2 py-0.5 rounded-full border border-richblack-700 bg-richblack-800 text-yellow-200 hover:bg-richblack-700"
             >
               ⏸ Pause
-            </button> */}
+            </button>
 
-            {/* <button
+            <button
               type="button"
               onClick={handleStopSpeech}
               className="text-[11px] px-2 py-0.5 rounded-full border border-richblack-700 bg-richblack-800 text-yellow-200 hover:bg-richblack-700"
             >
               ⏹ Stop
-            </button> */}
+            </button>
           </div>
         </div>
 
