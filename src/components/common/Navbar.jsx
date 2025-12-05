@@ -40,7 +40,7 @@ function Navbar() {
 // const subLinks = [
 //     { title: "Development", courses: [1, 2, 3] },
 //     { title: "Business", courses: [4, 5] },
-//     { title: "Finance & Accounting", courses: [] },
+//     { title: "Finance & Accounting", courses: [1,2,3] },
 // ]; 
 
   const matchRoute = (route) => {
@@ -80,17 +80,17 @@ function Navbar() {
                       {(subLinks && subLinks.length) ? (
                         <>
                           {subLinks
-                            .filter((subLink) => subLink?.courses?.length > 0)
-                            .map((subLink, i) => (
+                            .filter((subLink) => subLink?.courses?.length >=0)
+                            .map((subLink, index) => (
                               <Link
-                                to={`/catalog/${subLink.title
+                                to={`/catalog/${subLink.name
                                   .split(" ")
                                   .join("-")
                                   .toLowerCase()}`}
                                 className="rounded-lg bg-transparent py-4 pl-4 hover:bg-richblack-50"
-                                key={i}
+                                key={index}
                               >
-                                <p>{subLink.title}</p>
+                                <p>{subLink.name}</p>
                               </Link>
                             ))}
                         </>

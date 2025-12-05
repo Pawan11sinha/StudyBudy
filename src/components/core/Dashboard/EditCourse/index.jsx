@@ -28,11 +28,11 @@ export default function EditCourse() {
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  if (loading) {
+  
+ if (loading) {
     return (
       <div className="grid flex-1 place-items-center">
-        <div className="spinner"></div>
+        <div className="spinner" />
       </div>
     )
   }

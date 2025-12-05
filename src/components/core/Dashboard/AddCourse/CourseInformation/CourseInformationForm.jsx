@@ -61,7 +61,7 @@ export default function CourseInformationForm() {
 
   const isFormUpdated = () => {
     const currentValues = getValues()
-    // console.log("changes after editing form values:", currentValues)
+    console.log("changes after editing form values:", currentValues)
     if (
       currentValues.courseTitle !== course.courseName ||
       currentValues.courseShortDesc !== course.courseDescription ||
@@ -80,7 +80,9 @@ export default function CourseInformationForm() {
 
   //   handle next button click
   const onSubmit = async (data) => {
-    // console.log(data)
+    console.log(data)
+      console.log("IMAGE FIELD:", data.courseImage)
+  console.log("IS FILE:", data.courseImage instanceof File)
 
     if (editCourse) {
       // const currentValues = getValues()
@@ -231,12 +233,13 @@ export default function CourseInformationForm() {
           id="courseCategory"
           className="form-style w-full"
         >
+          {/* by default ye dikhega  */}
           <option value="" disabled>
             Choose a Category
           </option>
           {!loading &&
-            courseCategories?.map((category, indx) => (
-              <option key={indx} value={category?._id}>
+            courseCategories?.map((category, index) => (
+              <option key={index} value={category?._id}>
                 {category?.name}
               </option>
             ))}
