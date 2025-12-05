@@ -44,11 +44,13 @@ export const getAllCourses = async () => {
 export const fetchCourseDetails = async (courseId) => {
   const toastId = toast.loading("Loading...")
   //   dispatch(setLoading(true));
+
   let result = null
   try {
     const response = await apiConnector("POST", COURSE_DETAILS_API, {
       courseId,
     })
+   
     console.log("COURSE_DETAILS_API API RESPONSE............", response)
 
     if (!response.data.success) {
@@ -307,35 +309,47 @@ export const deleteCourse = async (data, token) => {
 
 // get full details of a course
 export const getFullDetailsOfCourse = async (courseId, token) => {
-  const toastId = toast.loading("Loading...")
-  //   dispatch(setLoading(true));
-  let result = null
+  const toastId = toast.loading("Loading...");
+  let result = null;
+
   try {
+    // Validate inputs (optional but helpful)
+    if (!courseId) throw new Error("Course ID is required");
+    if (!token) throw new Error("Token missing");
+
     const response = await apiConnector(
       "POST",
       GET_FULL_COURSE_DETAILS_AUTHENTICATED,
-      {
-        courseId,
-      },
+      { courseId },
       {
         Authorization: `Bearer ${token}`,
       }
-    )
-    console.log("COURSE_FULL_DETAILS_API API RESPONSE............", response)
+    );
 
-    if (!response.data.success) {
-      throw new Error(response.data.message)
+    console.log("COURSE_FULL_DETAILS API RESPONSE:", response);
+
+    // Correct check — ensures no crash
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message || "Failed to fetch course");
     }
-    result = response?.data?.data
+
+    result = response?.data?.data;
   } catch (error) {
-    console.log("COURSE_FULL_DETAILS_API API ERROR............", error)
-    result = error.response.data
-    // toast.error(error.response.data.message);
+    console.log("COURSE_FULL_DETAILS API ERROR:", error);
+
+    // Safe error handling (prevents crash on undefined)
+    result = error?.response?.data || {
+      success: false,
+      message: error.message || "Something went wrong",
+    };
+
+    toast.error(result.message);
   }
-  toast.dismiss(toastId)
-  //   dispatch(setLoading(false));
-  return result
-}
+
+  toast.dismiss(toastId);
+  return result;
+};
+
 
 // mark a lecture as complete
 export const markLectureAsComplete = async (data, token) => {

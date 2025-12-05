@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { BiInfoCircle } from "react-icons/bi"
 import { HiOutlineGlobeAlt } from "react-icons/hi"
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown from "react-markdown"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 
@@ -26,17 +26,15 @@ function CourseDetails() {
 
   // Getting courseId from url parameter
   const { courseId } = useParams()
-  // console.log(`course id: ${courseId}`)
 
   // Declear a state to save the course details
   const [response, setResponse] = useState(null)
   const [confirmationModal, setConfirmationModal] = useState(null)
+
   useEffect(() => {
-    // Calling fetchCourseDetails fucntion to fetch the details
     ;(async () => {
       try {
         const res = await fetchCourseDetails(courseId)
-        // console.log("course details res: ", res)
         setResponse(res)
       } catch (error) {
         console.log("Could not fetch Course Details")
@@ -44,25 +42,21 @@ function CourseDetails() {
     })()
   }, [courseId])
 
-  // console.log("response: ", response)
-
   // Calculating Avg Review count
   const [avgReviewCount, setAvgReviewCount] = useState(0)
   useEffect(() => {
-    const count = GetAvgRating(response?.data?.courseDetails.ratingAndReviews)
+    const count = GetAvgRating(
+      response?.data?.courseDetails?.ratingAndReviews || []
+    )
     setAvgReviewCount(count)
   }, [response])
-  // console.log("avgReviewCount: ", avgReviewCount)
 
-  // // Collapse all
-  // const [collapse, setCollapse] = useState("")
-  const [isActive, setIsActive] = useState(Array(0))
+  const [isActive, setIsActive] = useState([])
   const handleActive = (id) => {
-    // console.log("called", id)
     setIsActive(
       !isActive.includes(id)
         ? isActive.concat([id])
-        : isActive.filter((e) => e != id)
+        : isActive.filter((e) => e !== id)
     )
   }
 
@@ -71,7 +65,7 @@ function CourseDetails() {
   useEffect(() => {
     let lectures = 0
     response?.data?.courseDetails?.courseContent?.forEach((sec) => {
-      lectures += sec.subSection.length || 0
+      lectures += sec?.subSection?.length || 0
     })
     setTotalNoOfLectures(lectures)
   }, [response])
@@ -83,29 +77,29 @@ function CourseDetails() {
       </div>
     )
   }
+
   if (!response.success) {
     return <Error />
   }
 
-// destructuring ke baad
-const {
-  _id: course_id,
-  courseName,
-  courseDescription,
-  thumbnail,
-  price,
-  whatYouWillLearn,
-  courseContent,
-  ratingAndReviews,
-  instructor,
-  studentsEnrolled,
-  createdAt,
-} = response.data?.courseDetails || {}
-  
-const instructorName = instructor
-  ? `${instructor.firstName} ${instructor.lastName}`
-  : "Unknown Instructor"
+  // ✅ SAFE DESTRUCTURING
+  const {
+    _id: course_id,
+    courseName,
+    courseDescription,
+    thumbnail,
+    price,
+    whatYouWillLearn,
+    courseContent,
+    ratingAndReviews,
+    instructor,
+    studentsEnrolled,
+    createdAt,
+  } = response?.data?.courseDetails || {}
 
+  const instructorName = instructor
+    ? `${instructor.firstName} ${instructor.lastName}`
+    : "Unknown Instructor"
 
   const handleBuyCourse = () => {
     if (token) {
@@ -123,7 +117,6 @@ const instructorName = instructor
   }
 
   if (paymentLoading) {
-    // console.log("payment loading")
     return (
       <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
         <div className="spinner"></div>
@@ -161,20 +154,17 @@ const instructorName = instructor
                 <span>{`${studentsEnrolled.length} students enrolled`}</span>
               </div>
               {instructor && (
-              <div>
-                <p className="">
-                  
-                  Created By {`${instructor.firstName} ${instructor.lastName}`}
-                </p>
-              </div>
+                <div>
+                  <p className="">
+                    Created By {`${instructor.firstName} ${instructor.lastName}`}
+                  </p>
+                </div>
               )}
               <div className="flex flex-wrap gap-5 text-lg">
                 <p className="flex items-center gap-2">
-                  {" "}
                   <BiInfoCircle /> Created at {formatDate(createdAt)}
                 </p>
                 <p className="flex items-center gap-2">
-                  {" "}
                   <HiOutlineGlobeAlt /> English
                 </p>
               </div>
@@ -248,27 +238,26 @@ const instructorName = instructor
 
             {/* Author Details */}
             {instructor && (
-            <div className="mb-12 py-4">
-              <p className="text-[28px] font-semibold">Author</p>
-              <div className="flex items-center gap-4 py-4">
-                <img
-                  src={
-                    instructor.image
-                      ? instructor.image
-                      : `https://api.dicebear.com/5.x/initials/svg?seed=${instructor.firstName} ${instructor.lastName}`
-                  }
-                  alt="Author"
-                  className="h-14 w-14 rounded-full object-cover"
-                />
+              <div className="mb-12 py-4">
+                <p className="text-[28px] font-semibold">Author</p>
+                <div className="flex items-center gap-4 py-4">
+                  <img
+                    src={
+                      instructor.image
+                        ? instructor.image
+                        : `https://api.dicebear.com/5.x/initials/svg?seed=${instructor.firstName} ${instructor.lastName}`
+                    }
+                    alt="Author"
+                    className="h-14 w-14 rounded-full object-cover"
+                  />
+                </div>
                 <p className="text-lg">{`${instructor.firstName} ${instructor.lastName}`}</p>
+                <p className="text-richblack-50">
+                  {instructor?.additionalDetails?.about}
+                </p>
               </div>
-              <p className="text-richblack-50">
-                {instructor?.additionalDetails?.about}
-              </p>
-            </div>
-              )}
+            )}
           </div>
-        
         </div>
       </div>
       <Footer />

@@ -284,9 +284,15 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body
-    const courseDetails = await Course.findOne({
-      _id: courseId,
-    })
+
+    if (!courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Course ID is required",
+      })
+    }
+
+    const courseDetails = await Course.findOne({ _id: courseId })
       .populate({
         path: "instructor",
         populate: {
@@ -299,7 +305,7 @@ exports.getCourseDetails = async (req, res) => {
         path: "courseContent",
         populate: {
           path: "subSection",
-          select: "-videoUrl",
+          select: "-videoUrl", // thumbnail, title, duration etc. rahne do
         },
       })
       .exec()
@@ -311,17 +317,19 @@ exports.getCourseDetails = async (req, res) => {
       })
     }
 
+    // draft courses ko public page pe mat dikhana (agar chahiye to uncomment)
     // if (courseDetails.status === "Draft") {
     //   return res.status(403).json({
     //     success: false,
     //     message: `Accessing a draft course is forbidden`,
-    //   });
+    //   })
     // }
 
+    // total duration calculate
     let totalDurationInSeconds = 0
     courseDetails.courseContent.forEach((content) => {
       content.subSection.forEach((subSection) => {
-        const timeDurationInSeconds = parseInt(subSection.timeDuration)
+        const timeDurationInSeconds = Number(subSection.timeDuration) || 0
         totalDurationInSeconds += timeDurationInSeconds
       })
     })
@@ -333,15 +341,18 @@ exports.getCourseDetails = async (req, res) => {
       data: {
         courseDetails,
         totalDuration,
+        
       },
     })
   } catch (error) {
+    console.error("GET_COURSE_DETAILS_ERROR:", error)
     return res.status(500).json({
       success: false,
       message: error.message,
     })
   }
 }
+
 exports.getFullCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body

@@ -17,7 +17,6 @@ import PrivateRoute from "./components/core/Auth/PrivateRoute";
 import Error from "./pages/Error"
 import MyProfile from "./components/core/Dashboard/MyProfile";
 import Settings from "./components/core/Dashboard/Settings";
-
 import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses";
 import Cart from "./components/core/Dashboard/Cart";
 import { ACCOUNT_TYPE } from "./utils/constants";
@@ -32,19 +31,7 @@ import Instructor from "./components/core/Dashboard/InstructorDashboard/Instruct
 
 // App.jsx or Routes.jsx
 
-
-
 // aur tumhara PrivateRoute/RequireAuth
-
-
-
-
-
-
-
-
-
-
 
 const App = () => {
     const dispatch = useDispatch();
