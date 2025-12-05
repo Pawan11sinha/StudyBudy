@@ -26,6 +26,8 @@ function loadScript(src) {
 
 export async function buyCourse(token, courses, userDetails, navigate, dispatch) {
     const toastId = toast.loading("Loading...");
+
+    console.log("A PRINTING courses", courses);
     try{
         //load the script
         const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
@@ -34,6 +36,8 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch)
             toast.error("RazorPay SDK failed to load");
             return;
         }
+
+        console.log("B PRINTING courses", courses);
 
         //initiate the order
         const orderResponse = await apiConnector("POST", COURSE_PAYMENT_API, 
@@ -45,27 +49,28 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch)
         if(!orderResponse.data.success) {
             throw new Error(orderResponse.data.message);
         }
+
+        console.log("C PRINTING courses", courses);
         console.log("PRINTING orderResponse", orderResponse);
         //options
-        const options = {
-            key: process.env.RAZORPAY_KEY,
-            currency: orderResponse.data.message.currency,
-            amount: `${orderResponse.data.message.amount}`,
-            order_id:orderResponse.data.message.id,
-            name:"StudyNotion",
-            description: "Thank You for Purchasing the Course",
-            image:rzpLogo,
-            prefill: {
-                name:`${userDetails.firstName}`,
-                email:userDetails.email
-            },
-            handler: function(response) {
-                //send successful wala mail
-                sendPaymentSuccessEmail(response, orderResponse.data.message.amount,token );
-                //verifyPayment
-                verifyPayment({...response, courses}, token, navigate, dispatch);
-            }
-        }
+       const options = {
+    key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+    currency: orderResponse.data.data.currency,
+    amount: `${orderResponse.data.data.amount}`,
+    order_id: orderResponse.data.data.id,
+    name: "StudyNotion",
+    description: "Thank You for Purchasing the Course",
+    image: rzpLogo,
+    prefill: {
+        name: userDetails.firstName,
+        email: userDetails.email
+    },
+    handler: function (response) {
+        sendPaymentSuccessEmail(response, orderResponse.data.data.amount, token);
+        verifyPayment({ ...response, courses }, token, navigate, dispatch);
+    }
+}
+
         //miss hogya tha 
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();

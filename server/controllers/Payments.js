@@ -33,9 +33,10 @@ exports.capturePayment = async (req, res) => {
           .json({ success: false, message: "Could not find the Course" })
       }
 
+  
       // Check if the user is already enrolled in the course
       const uid = new mongoose.Types.ObjectId(userId)
-      if (course.studentsEnroled.includes(uid)) {
+      if (course.studentsEnrolled.includes(uid)) {
         return res
           .status(200)
           .json({ success: false, message: "Student is already Enrolled" })
@@ -55,20 +56,34 @@ exports.capturePayment = async (req, res) => {
     receipt: Math.random(Date.now()).toString(),
   }
 
+  // try {
+  //   // Initiate the payment using Razorpay
+  //   const paymentResponse = await instance.orders.create(options)
+  //   console.log(paymentResponse)
+  //   res.json({
+  //     success: true,
+  //     data: paymentResponse,
+  //   })
+  // } catch (error) {
+  //   console.log(error)
+  //   res
+  //     .status(500)
+  //     .json({ success: false, message: "Could not initiate order." })
+  // }
+
   try {
-    // Initiate the payment using Razorpay
-    const paymentResponse = await instance.orders.create(options)
-    console.log(paymentResponse)
-    res.json({
-      success: true,
-      data: paymentResponse,
-    })
-  } catch (error) {
-    console.log(error)
-    res
-      .status(500)
-      .json({ success: false, message: "Could not initiate order." })
-  }
+  const paymentResponse = await instance.orders.create(options)
+  console.log("🔥 RAZORPAY ORDER CREATED:", paymentResponse)
+  return res.json({ success: true, data: paymentResponse })
+} catch (error) {
+  console.log("🧨 RAZORPAY ORDER ERROR:", JSON.stringify(error, null, 2))
+  return res.status(500).json({
+    success: false,
+    message: "Could not initiate order.",
+    error
+  })
+}
+
 }
 
 // verify the payment
@@ -151,7 +166,7 @@ const enrollStudents = async (courses, userId, res) => {
       // Find the course and enroll the student in it
       const enrolledCourse = await Course.findOneAndUpdate(
         { _id: courseId },
-        { $push: { studentsEnroled: userId } },
+        { $push: { studentsEnrolled: userId } },
         { new: true }
       )
 

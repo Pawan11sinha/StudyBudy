@@ -26,8 +26,8 @@ import MyCourses from "./components/core/Dashboard/MyCourses";
 import EditCourse from "./components/core/Dashboard/EditCourse/index.jsx";
 import Catalog from "./pages/Catalog";
 import CourseDetails from "./pages/CourseDetails";
-// import ViewCourse from "./pages/ViewCourse";
-// import VideoDetails from "./components/core/ViewCourse/VideoDetails";
+import ViewCourse from "./pages/ViewCourse";
+import VideoDetails from "./components/core/ViewCourse/VideoDetails";
 import Instructor from "./components/core/Dashboard/InstructorDashboard/Instructor";
 
 // App.jsx or Routes.jsx
@@ -175,7 +175,7 @@ const App = () => {
 
 
 
-      {/* <Route element={
+      <Route element={
         <PrivateRoute>
           <ViewCourse />
         </PrivateRoute>
@@ -192,7 +192,7 @@ const App = () => {
         )
       }
 
-      </Route> */}
+      </Route>
 
 
 

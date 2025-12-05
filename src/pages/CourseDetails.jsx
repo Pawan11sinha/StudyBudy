@@ -87,19 +87,25 @@ function CourseDetails() {
     return <Error />
   }
 
-  const {
-    _id: course_id,
-    courseName,
-    courseDescription,
-    thumbnail,
-    price,
-    whatYouWillLearn,
-    courseContent,
-    ratingAndReviews,
-    instructor,
-    studentsEnrolled,
-    createdAt,
-  } = response.data?.courseDetails
+// destructuring ke baad
+const {
+  _id: course_id,
+  courseName,
+  courseDescription,
+  thumbnail,
+  price,
+  whatYouWillLearn,
+  courseContent,
+  ratingAndReviews,
+  instructor,
+  studentsEnrolled,
+  createdAt,
+} = response.data?.courseDetails || {}
+  
+const instructorName = instructor
+  ? `${instructor.firstName} ${instructor.lastName}`
+  : "Unknown Instructor"
+
 
   const handleBuyCourse = () => {
     if (token) {
@@ -154,11 +160,14 @@ function CourseDetails() {
                 <span>{`(${ratingAndReviews.length} reviews)`}</span>
                 <span>{`${studentsEnrolled.length} students enrolled`}</span>
               </div>
+              {instructor && (
               <div>
                 <p className="">
+                  
                   Created By {`${instructor.firstName} ${instructor.lastName}`}
                 </p>
               </div>
+              )}
               <div className="flex flex-wrap gap-5 text-lg">
                 <p className="flex items-center gap-2">
                   {" "}
@@ -238,6 +247,7 @@ function CourseDetails() {
             </div>
 
             {/* Author Details */}
+            {instructor && (
             <div className="mb-12 py-4">
               <p className="text-[28px] font-semibold">Author</p>
               <div className="flex items-center gap-4 py-4">
@@ -256,7 +266,9 @@ function CourseDetails() {
                 {instructor?.additionalDetails?.about}
               </p>
             </div>
+              )}
           </div>
+        
         </div>
       </div>
       <Footer />
