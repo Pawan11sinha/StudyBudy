@@ -54,5 +54,4 @@ OTPSchema.post("save", function (doc) {
 		// Email failure doesn't affect the OTP creation
 	});
 });
-
-const OTP = mongoose.model("OTP", OTPSchema);
+module.exports = mongoose.model("OTP", OTPSchema);
