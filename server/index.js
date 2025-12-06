@@ -23,10 +23,7 @@ database.connect();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:5175",
-  "https://localhost:5173",
-  "https://localhost:5175",
-  process.env.FRONTEND_URL,
+ 
 ].filter(Boolean);
 
 console.log("Allowed CORS origins:", allowedOrigins);
