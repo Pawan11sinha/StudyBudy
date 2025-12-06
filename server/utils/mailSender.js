@@ -7,7 +7,11 @@ const mailSender = async (email, title, body) => {
                 auth:{
                     user: process.env.MAIL_USER,
                     pass: process.env.MAIL_PASS,
-                }
+                },
+                // Add connection timeout to prevent hanging
+                connectionTimeout: 10000, // 10 seconds
+                greetingTimeout: 10000, // 10 seconds
+                socketTimeout: 10000, // 10 seconds
             })
 
 

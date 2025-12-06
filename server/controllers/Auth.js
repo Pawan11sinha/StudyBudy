@@ -41,22 +41,13 @@ exports.sendotp = async (req, res) => {
       })
     }
 
-    // generate unique OTP
-    let otp = otpGenerator.generate(6, {
+    // Generate OTP (no need to check uniqueness since OTPs are email-specific)
+    // Same OTP can exist for different emails without conflict
+    const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
       specialChars: false,
     })
-
-    let existingOtp = await OTP.findOne({ otp })
-    while (existingOtp) {
-      otp = otpGenerator.generate(6, {
-        upperCaseAlphabets: false,
-        lowerCaseAlphabets: false,
-        specialChars: false,
-      })
-      existingOtp = await OTP.findOne({ otp })
-    }
 
     const otpPayload = { email, otp }
     const otpBody = await OTP.create(otpPayload)

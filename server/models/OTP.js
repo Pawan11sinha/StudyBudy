@@ -41,20 +41,17 @@ async function sendVerificationEmail(email, otp) {
 	}
 }
 
-// Define a pre-save hook to send email after the document has been saved
-OTPSchema.pre("save", async function () {
-	console.log("New document saved to database");
+// Define a post-save hook to send email after the document has been saved
+// Using post-save and fire-and-forget to avoid blocking the response
+OTPSchema.post("save", function (doc) {
+	console.log("OTP document saved to database, sending email in background");
 
-	// Only send an email when a new document is created
-	if (this.isNew) {
-		try {
-			await sendVerificationEmail(this.email, this.otp);
-		} catch (error) {
-			console.error("Failed to send verification email:", error);
-			// Don't throw error - allow OTP to be saved even if email fails
-		}
-	}
-	// No need to call next() when using async/await in Mongoose
+	// Fire and forget - don't await, send email in background
+	// This ensures the API response is not delayed by email sending
+	sendVerificationEmail(doc.email, doc.otp).catch(error => {
+		console.error("Failed to send verification email:", error);
+		// Email failure doesn't affect the OTP creation
+	});
 });
 
 const OTP = mongoose.model("OTP", OTPSchema);
