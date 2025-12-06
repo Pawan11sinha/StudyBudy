@@ -54,7 +54,7 @@ exports.sendotp = async (req, res) => {
     console.log("OTP Body", otpBody)
 
     // agar yahin se mail bhejna hai to:
-    // await mailSender(email, "Your OTP", `Your OTP is ${otp}`)
+    await mailSender(email, "Your OTP", `Your OTP is ${otp}`)
 
     return res.status(200).json({
       success: true,
