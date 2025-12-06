@@ -40,21 +40,19 @@ exports.sendotp = async (req, res) => {
         message: `User is Already Registered`,
       })
     }
-
-    // Generate OTP (no need to check uniqueness since OTPs are email-specific)
+      // Generate OTP (no need to check uniqueness since OTPs are email-specific)
     // Same OTP can exist for different emails without conflict
     const otp = otpGenerator.generate(6, {
-      upperCaseAlphabets: false,
+        upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
       specialChars: false,
     })
-
-    const otpPayload = { email, otp }
+     const otpPayload = { email, otp }
     const otpBody = await OTP.create(otpPayload)
     console.log("OTP Body", otpBody)
 
     // agar yahin se mail bhejna hai to:
-    await mailSender(email, "Your OTP", `Your OTP is ${otp}`)
+    // await mailSender(email, "Your OTP", `Your OTP is ${otp}`)
 
     return res.status(200).json({
       success: true,
