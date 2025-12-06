@@ -17,6 +17,14 @@ exports.sendotp = async (req, res) => {
   try {
     const { email } = req.body
 
+    // Validate email is provided
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      })
+    }
+
     const checkUserPresent = await User.findOne({ email })
     if (checkUserPresent) {
       return res.status(401).json({
